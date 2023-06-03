@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 389b3935cb496274a85a90ddf5c96901, type: 3}
+  m_Name: BulletDance
+  m_EditorClassIdentifier: 
+  name: BulletDance
+  baseCooldown: 2
+  cooldownTime: 2
+  activeTime: 2
+  sprite: {fileID: 963412444372583226, guid: 0ddcf02e008610b42931d58849f47194, type: 3}
+  spriteInstance: {fileID: 0}

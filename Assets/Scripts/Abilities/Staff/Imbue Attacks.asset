@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a1a7c426a9862440900a8f792d166a5, type: 3}
+  m_Name: Imbue Attacks
+  m_EditorClassIdentifier: 
+  name: Imbue Attacks
+  baseCooldown: 10
+  cooldownTime: 1
+  activeTime: 5
+  sprite: {fileID: 4384967543299274609, guid: 89dabdc35b283bf4bb004e8b7aadd404, type: 3}
+  spriteInstance: {fileID: 0}
