@@ -38,7 +38,7 @@ public class UISetAbilities : MonoBehaviour
             if (holders[i].ability)
             {
                 target.GetComponent<Image>().enabled = true;
-
+                target.GetComponent<Image>().preserveAspect= true;
                 target.GetComponent<Image>().sprite = holders[i].ability.sprite.GetComponent<SpriteRenderer>().sprite;
                 target.GetComponent<Image>().color = holders[i].ability.sprite.GetComponent<SpriteRenderer>().color;
 
@@ -46,7 +46,7 @@ public class UISetAbilities : MonoBehaviour
                 {
                     var cdDisplay = cdIcons[i];
                     cdDisplay.SetActive(true);
-                    Debug.Log(holders[i].getCooldownTime() > 0);
+                  //  Debug.Log(holders[i].getCooldownTime() > 0);
                    
 
                     var text = cdDisplay.GetComponentInChildren<TextMeshProUGUI>();

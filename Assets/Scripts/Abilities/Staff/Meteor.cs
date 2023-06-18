@@ -21,7 +21,8 @@ public class Meteor : Ability
 
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         mousePos.z = 0;
-       // sprite.GetComponent<MeteorDamage>().SetDamage(damage);
+        // sprite.GetComponent<MeteorDamage>().SetDamage(damage);
+        this.cooldownTime = Mathf.Max(this.baseCooldown - ap * 0.2f, 1);
 
         spriteInstance = Instantiate(sprite);
 
@@ -33,7 +34,6 @@ public class Meteor : Ability
         activeTime = 2*tickRate;
         spriteInstance.GetComponent<Timer>().StartTimer();
 
-        spriteInstance.transform.localScale = new Vector3(radius, radius, 1);
         spriteInstance.transform.position = mousePos;
         Destroy(spriteInstance,activeTime);
 

@@ -14,6 +14,10 @@ public class Melee : MonoBehaviour
     private float attackSpeed;
     private float attackTimer = 0f;
     private Stats playerStats;
+    public void setAttack(bool canAttack)
+    {
+        this.canAttack=canAttack;
+    }
     private void Start()
     {
         playerStats = GameObject.FindGameObjectWithTag("Player").GetComponent<StatsHolder>().getCurrStats();
@@ -25,6 +29,8 @@ public class Melee : MonoBehaviour
 
     void Update()
     {
+        swipe.GetComponent<MeleeDamage>().damage = swipe.GetComponent<MeleeDamage>().baseDamage+    Mathf.Pow(playerStats.GetStatValue(StatType.ad), 1.5f) / Mathf.Pow(3, 2);
+
         if (!canAttack) AttackingSpeed();
 
         if (Input.GetButtonDown("Fire1") && canAttack   )
@@ -48,7 +54,6 @@ public class Melee : MonoBehaviour
 
     IEnumerator SwipeActive()
     {
-        swipe.GetComponent<MeleeDamage>().damage += Mathf.Pow(playerStats.GetStatValue(StatType.ad), 2.5f) / Mathf.Pow(3, 2);
         swipe.GetComponent<PolygonCollider2D>().enabled = true;
         swipe.GetComponent<SpriteRenderer>().enabled = true;
         //swipe.SetActive(true);

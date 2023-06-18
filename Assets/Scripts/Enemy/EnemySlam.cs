@@ -10,12 +10,15 @@ public class EnemySlam : MonoBehaviour
     private float tickRate = 0.75f;
     private void FixedUpdate()
     {
-        this.GetComponent<SpriteRenderer>().color = new Color(255, 255, 0);
+        var c = this.GetComponent<SpriteRenderer>().color;
+        c.a = .20f;
+        this.GetComponent<SpriteRenderer>().color = c;
         canDamage = this.GetComponent<Timer>().consumeTrigger;
 
         if (canDamage)
         {
-            this.GetComponent<SpriteRenderer>().color = new Color(0, 250, 0);
+            c.a = .80f;
+            this.GetComponent<SpriteRenderer>().color = c;
             this.GetComponent<Timer>().consumeTrigger = false;
             this.GetComponent<Timer>().timeRemaining = tickRate;
             this.GetComponent<Timer>().StartTimer();

@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bf478d5109975b4781aeb264598a65d, type: 3}
+  m_Name: The Big One
+  m_EditorClassIdentifier: 
+  name: The Big One
+  baseCooldown: 10
+  cooldownTime: 10
+  activeTime: 0.25
+  sprite: {fileID: 3067727684219720234, guid: a6d14cc108cbe40468577d316b86e761, type: 3}
+  firePoint: {fileID: 0}
+  bulletPrefab: {fileID: 3067727684219720234, guid: a6d14cc108cbe40468577d316b86e761, type: 3}
+  bulletForce: 20

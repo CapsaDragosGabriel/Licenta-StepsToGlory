@@ -56,6 +56,14 @@ public class AbilityHolder : MonoBehaviour
             canPickup = false;
     }
 
+    public void forceStopAbility()
+        {
+        activeTime = 0;
+        ability.BeginCooldown(gameObject);
+        state = AbilityState.cooldown;
+        cooldownTime = ability.cooldownTime;
+        }
+
     // Update is called once per frame
     void Update()
     {

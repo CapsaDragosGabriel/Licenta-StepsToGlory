@@ -162,22 +162,36 @@ public class EnemyAIMelee : MonoBehaviour,IEffecteable
     }
     private float _currentEffectTimer = 0f;
     private float _nextTickTime = 0f;
+    bool slowApplied = false;
+
     public void HandleEffect()
     {
+
         if (_data == null) return;
         _currentEffectTimer += Time.deltaTime;
-
         if (_data.DOTAmount != 0 && _currentEffectTimer > _nextTickTime)
         {
             _nextTickTime += _data.tickSpeed;
             this.GetComponent<EnemyHealth>().TakeDamage((int)_data.DOTAmount);
+
+
+
+
+            if (_data.movementPenalty != 0 && slowApplied == false)
+            {
+                slowApplied = true;
+                this.speed = this.speed - _data.movementPenalty;
+
+            }
         }
 
-        if (_currentEffectTimer> _data.duration)
+        if (_currentEffectTimer > _data.duration)
         {
+            if (slowApplied) this.speed += _data.movementPenalty;
+            slowApplied = false;
             RemoveEffect();
         }
-        
+
     }
     private GameObject _effectParticles;
     public void ApplyEffect(StatusEffectData _data)

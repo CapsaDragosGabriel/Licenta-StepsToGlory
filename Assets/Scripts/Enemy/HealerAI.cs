@@ -31,7 +31,7 @@ public class HealerAI : MonoBehaviour, IEffecteable
     private float healActiveTime = 3f;
     private float healTickRate = 1.5f;
 
-
+    public AudioSource shootClip;
     private bool canShoot = true;
     private bool targetLocked = false;
 
@@ -156,6 +156,7 @@ if (targetLocked && reachedRange)
                 else if (canShoot)
                 {
                     Shoot();
+                    shootClip.Play();
                     canShoot= false; 
                 }
                
@@ -210,38 +211,44 @@ if (targetLocked && reachedRange)
     public GameObject bulletPrefab;
     public float damage = 1f;
     public float bulletForce = 2f;
-    Vector3 damagedEnemyPosition = Vector3.zero;
-    private List<Collider2D> colliders=new List<Collider2D>();
+   public Vector3 damagedEnemyPosition = Vector3.zero;
+    public List<Collider2D> colliders=new List<Collider2D>();
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!colliders.Contains(collision)) colliders.Add(collision);
+        if (!colliders.Contains(collision) &&collision.GetType() == typeof(BoxCollider2D)) colliders.Add(collision);
     }
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (!colliders.Contains(collision)) colliders.Add(collision);
+        if (!colliders.Contains(collision) && collision.GetType() == typeof(BoxCollider2D)) colliders.Add(collision);
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
     }
     private bool SearchDamagedEnemy()
     {
+        List<Collider2D> list = new List<Collider2D>();
         foreach (Collider2D collider in colliders)
         {
             if (collider)
+            {
                 if (collider.tag == "Enemy")
-                        if (!collider.GetComponent<EnemyHealth>().isFull())
-                        {
-                           // Debug.Log("Heals please");
-                            damagedEnemyPosition = collider.GetComponent<Transform>().position;
-                            return true;
-                        }
+                    if (!collider.GetComponent<EnemyHealth>().isFull())
+                    {
+                        // Debug.Log("Heals please");
+                        damagedEnemyPosition = collider.GetComponent<Transform>().position;
+                        //colliders.Remove(collider);
+                        return true;
+                    }
+            }
+            else list.Add(collider); 
         }
+     
         return false;
     }
     void CastHeal(Vector3 position)
     {
-        
-        {
+
+        Debug.Log("CAST HEAL");
             GameObject healInstance = Instantiate(enemyHealPrefab);
             healInstance.GetComponent<Transform>().position = position;
             healInstance.GetComponent<enemyHeal>().SetDamage(healDamage);
@@ -255,7 +262,7 @@ if (targetLocked && reachedRange)
             StartCoroutine("ResetHeal");
             damagedEnemyPosition=Vector3.zero; 
             Destroy(healInstance, healActiveTime);
-        }
+        
     }
 
     public IEnumerator ResetHeal()
@@ -286,7 +293,7 @@ if (targetLocked && reachedRange)
             rbbullet.velocity = rbbullet.velocity.normalized * bulletForce;
             //setat rotatia sagetii
             Vector2 lookDir = (Vector2)target.position - (Vector2)rbbullet.position;
-            float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f;
+            float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg ;
 
             rbbullet.rotation = angle;
             rbbullet.freezeRotation = true;
@@ -314,19 +321,33 @@ if (targetLocked && reachedRange)
 
     private float _currentEffectTimer = 0f;
     private float _nextTickTime = 0f;
+    bool slowApplied = false;
+
     public void HandleEffect()
     {
+
         if (_data == null) return;
         _currentEffectTimer += Time.deltaTime;
-
         if (_data.DOTAmount != 0 && _currentEffectTimer > _nextTickTime)
         {
             _nextTickTime += _data.tickSpeed;
             this.GetComponent<EnemyHealth>().TakeDamage((int)_data.DOTAmount);
+
+
+
+
+            if (_data.movementPenalty!= 0 && slowApplied==false)
+            {
+                slowApplied = true;
+                this.speed = this.speed - _data.movementPenalty;
+
+            }
         }
 
         if (_currentEffectTimer > _data.duration)
         {
+           if (slowApplied) this.speed+= _data.movementPenalty;
+           slowApplied= false;
             RemoveEffect();
         }
 

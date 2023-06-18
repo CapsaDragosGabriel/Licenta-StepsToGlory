@@ -15,6 +15,11 @@ public class Shooting : MonoBehaviour
     private float attackSpeed ;
     private float attackTimer = 0f;
     private Stats playerStats;
+    public AudioSource gunSound;
+    public void setShoot( bool shoot)
+    {
+       canShoot = shoot;
+    }
     private void Start()
     {
         playerStats=GameObject.FindGameObjectWithTag("Player").GetComponent<StatsHolder>().getCurrStats();
@@ -27,6 +32,14 @@ public class Shooting : MonoBehaviour
         if (Input.GetButtonDown("Fire1")&& canShoot)
         {
             Shoot();
+
+
+            float vol;
+            if (gunSound != null)
+            {
+                gunSound.outputAudioMixerGroup.audioMixer.GetFloat("Volume", out vol);
+                AudioSource.PlayClipAtPoint(gunSound.clip, transform.position, Mathf.Min((vol + 60) / 1000, 1));
+            }
             canShoot = false;
 
         }

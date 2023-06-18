@@ -17,10 +17,9 @@ public class MeleeAIEvolved : MonoBehaviour, IEffecteable
 
     private Collider2D aggroRange;
 
-    private bool castSpells = false;
-    private bool canDash = true;
+    public bool canDash = true;
     private bool isDashing = false;
-    private float dashingPower = 20f;
+    private float dashingPower = 30f;
     private float dashingTime = 0.3f;
     private float dashingCooldown = 5f;
     private bool targetLocked = false;
@@ -38,7 +37,7 @@ public class MeleeAIEvolved : MonoBehaviour, IEffecteable
     void Start()
     {
         Physics.IgnoreLayerCollision(1, 1);
-        aggroRange = GetComponent<CircleCollider2D>();
+        aggroRange = GetComponents<CircleCollider2D>()[0];
         seeker = GetComponent<Seeker>();
         if (target == null)
             target = GameObject.FindGameObjectWithTag("Player").transform;
@@ -46,7 +45,8 @@ public class MeleeAIEvolved : MonoBehaviour, IEffecteable
         //Debug.Log(target);
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-       
+
+        InvokeRepeating("UpdatePath", 0f, 0.5f);
 
         slamAggroCollider = this.GetComponents<CircleCollider2D>()[1];
 
@@ -61,7 +61,7 @@ public class MeleeAIEvolved : MonoBehaviour, IEffecteable
                     || this.GetComponent<EnemyHealth>().maxHealth != this.GetComponent<EnemyHealth>().health)
             {
                 //if (enableSpellsTimer > 0f) enableSpellsTimer -= Time.fixedDeltaTime;
-                if (!castSpells) StartCoroutine("enableSpells");
+              //  if (!castSpells) StartCoroutine("enableSpells");
                 targetLocked = true;
                 if (seeker.IsDone())
                 {
@@ -88,17 +88,15 @@ public class MeleeAIEvolved : MonoBehaviour, IEffecteable
     // Update is called once per frame
 
     public bool isStunned = false;
-    public bool invoked=false;
     void FixedUpdate()
     {
-        if (!invoked) { InvokeRepeating("UpdatePath", 0f, 0.5f); invoked = true; }
+        // if (!invoked) { InvokeRepeating("UpdatePath", 0f, 0.5f); invoked = true; }
         if (_data != null) HandleEffect();
         if (isStunned) return;
         if (path == null)
             return;
         if (isDashing)
             return;
-
 
         if (currentWaypoint >= path.vectorPath.Count)
         {
@@ -110,17 +108,17 @@ public class MeleeAIEvolved : MonoBehaviour, IEffecteable
         {
             reachedEndPath = false;
         }
-        Vector2 direction = ((Vector2)path.vectorPath[currentWaypoint] - rb.position).normalized;
+ Vector2 direction = ((Vector2)path.vectorPath[currentWaypoint] - rb.position).normalized;
 
         Vector2 force = direction * speed * Time.deltaTime;
         float distance = Vector2.Distance(rb.position, path.vectorPath[currentWaypoint]);
-        if (distance < nextWaypointDistance)
-        {
+        if (distance < nextWaypointDistance) {
             currentWaypoint++;
         }
 
 
-        if (direction != null && canDash && targetLocked && castSpells)
+    
+        if (direction != null && canDash && targetLocked )
         {
             StartCoroutine(DashSlam(direction));
             // StartCoroutine("Slam");
@@ -143,17 +141,18 @@ public class MeleeAIEvolved : MonoBehaviour, IEffecteable
         }
         if (target)
             if (Vector2.Distance(this.transform.position, target.transform.position) < slamAggroCollider.radius)
-               // if (slamAggroCollider.IsTouching(target.GetComponent<CircleCollider2D>()))
+                if (slamAggroCollider.IsTouching(target.GetComponent<CircleCollider2D>()))
         {
                     StartCoroutine("Slam");
         }
+       
     }
     [SerializeField]
     private GameObject slamEffect;
     [SerializeField]
     private float slamDamage = 3f;
     [SerializeField]
-    private float slamCooldown = 4f;
+    private float slamCooldown = 2f;
     [SerializeField]
     private float slammingTime = 2.5f;
     [SerializeField]
@@ -171,25 +170,26 @@ public class MeleeAIEvolved : MonoBehaviour, IEffecteable
             Destroy(slamInstance,slammingTime);
 
             var currVelocity = rb.velocity;
-            rb.velocity = Vector2.zero;
+           // rb.velocity = Vector2.zero;
             isSlamming = true;
             canSlam = false;
             yield return new WaitForSeconds(slammingTime);
-            rb.velocity = currVelocity;
+           // rb.velocity = currVelocity;
             isSlamming = false;
             yield return new WaitForSeconds(slamCooldown);
             canSlam = true;
         }
       
     }
+
     private IEnumerator DashSlam(Vector2 movement)
     {
         canDash = false;
         isDashing = true;
 
-        rb.velocity = new Vector2(transform.localScale.x * dashingPower * movement.x, transform.localScale.y * dashingPower * movement.y);
+        rb.velocity = new Vector2(transform.localScale.x * dashingPower*5* movement.x, transform.localScale.y * dashingPower*5 * movement.y);
         yield return new WaitForSeconds(dashingTime);
-        StartCoroutine("Slam");
+      StartCoroutine("Slam");
 
         isDashing = false;
         yield return new WaitForSeconds(dashingCooldown);
@@ -197,27 +197,40 @@ public class MeleeAIEvolved : MonoBehaviour, IEffecteable
 
 
     }
+
+
+   
     private float _currentEffectTimer = 0f;
     private float _nextTickTime = 0f;
-    private IEnumerator enableSpells()
-    {
-        yield return new WaitForSeconds(enableSpellsTimer);
-        castSpells = true;
-    }
+  
+
+    bool slowApplied = false;
 
     public void HandleEffect()
     {
+
         if (_data == null) return;
         _currentEffectTimer += Time.deltaTime;
-
         if (_data.DOTAmount != 0 && _currentEffectTimer > _nextTickTime)
         {
             _nextTickTime += _data.tickSpeed;
             this.GetComponent<EnemyHealth>().TakeDamage((int)_data.DOTAmount);
+
+
+
+
+            if (_data.movementPenalty != 0 && slowApplied == false)
+            {
+                slowApplied = true;
+                this.speed = this.speed - _data.movementPenalty;
+
+            }
         }
 
         if (_currentEffectTimer > _data.duration)
         {
+            if (slowApplied) this.speed += _data.movementPenalty;
+            slowApplied = false;
             RemoveEffect();
         }
 

@@ -9,19 +9,40 @@ public class MeteorDamage : MonoBehaviour
     float tickRate=0.25f;
     public bool canDamage = false;
     public StatusEffectData _data;
-
+    private int  b=255;
+    private float a = 1;
+    private void Start()
+    {
+       
+    }
+    private void Update()
+    {
+       
+    }
     private void FixedUpdate()
     {
-        this.GetComponent<SpriteRenderer>().color = new Color(0, 0, 255);
+       StartCoroutine(changeColors());
 
         canDamage = this.GetComponent<Timer>().consumeTrigger;
         if (canDamage)
         {
-            this.GetComponent<SpriteRenderer>().color = new Color(250,0,0);
             this.GetComponent<Timer>().consumeTrigger = false;
             this.GetComponent<Timer>().timeRemaining = 0;
             
         }
+    }
+    IEnumerator changeColors()
+    {
+       
+
+            b = Mathf.Max(b - 30, 0);
+            var c = new Color(0, 0, b);
+            a -= .1f;
+        c.a = a;
+            this.GetComponent<SpriteRenderer>().color = c;
+            yield return new WaitForSeconds(0.025f);
+       
+
     }
     private void OnTriggerStay2D(Collider2D collider)
     {

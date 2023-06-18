@@ -7,7 +7,6 @@ public enum StatType
    health, 
    ad,
    ap,
-   cd,
    endurance,
    attack,
    

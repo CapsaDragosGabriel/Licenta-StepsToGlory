@@ -97,8 +97,11 @@ public class spawner2 : MonoBehaviour
                // print(SceneManager.GetActiveScene().name);
 
                 int enemyType =  Random.Range(0, Spawns.Count);
-                Instantiate(Spawns[enemyType], new Vector3(availablePlaces[i].x + 0.5f, availablePlaces[i].y + 0.5f, availablePlaces[i].z), Quaternion.identity);
-                //availablePlaces.Remove()
+                if (Spawns.Count != 0)
+                {
+                    var monster= Instantiate(Spawns[enemyType], new Vector3(availablePlaces[i].x + 0.5f, availablePlaces[i].y + 0.5f, availablePlaces[i].z), Quaternion.identity);
+                    monster.SetActive(true);
+                }//availablePlaces.Remove()
             }
 
         }

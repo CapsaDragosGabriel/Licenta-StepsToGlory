@@ -30,8 +30,10 @@ public class MinigunAi : MonoBehaviour, IEffecteable
     Seeker seeker;
     Rigidbody2D rb;
 
-
-
+   public AudioSource minigunEffect;
+   public AudioSource singleShot;
+    bool toggleFire = false;
+  
 
     private bool canUseBurst = true;
     private bool isUsingBurst = false;
@@ -79,7 +81,7 @@ public class MinigunAi : MonoBehaviour, IEffecteable
                         {
                             reachedRange = true;
                             rb.velocity = Vector3.zero;
-                            Debug.Log("stop");
+                         //   Debug.Log("stop");
                         }
                     }
                 }
@@ -104,7 +106,7 @@ public class MinigunAi : MonoBehaviour, IEffecteable
     float currBurst = 0f;
     void burstSpeed()
     {
-        if (currBurst >= burstActive) { isUsingBurst = false; currBurst = 0f; attackSpeed = baseAttackSpeed; }
+        if (currBurst >= burstActive) { isUsingBurst = false; currBurst = 0f; attackSpeed = baseAttackSpeed; toggleFire = true; }
         else currBurst += Time.deltaTime;
     }
     void burstCooldown()
@@ -114,6 +116,7 @@ public class MinigunAi : MonoBehaviour, IEffecteable
     }
     void burst()
     {
+        toggleFire = false;
         isUsingBurst = true;
         canUseBurst = false;
         currBurst = 0f;
@@ -146,7 +149,12 @@ public class MinigunAi : MonoBehaviour, IEffecteable
 
             if (canUseBurst) burst();
             if (target != null)
-                Shoot();
+            { Shoot();
+                if (toggleFire == false )
+                    minigunEffect.Play(0);
+                else if (minigunEffect.isPlaying == false && toggleFire==true)
+                    singleShot.Play(0);
+            }
              canShoot = false;
 
         }
@@ -214,7 +222,7 @@ public class MinigunAi : MonoBehaviour, IEffecteable
             rbbullet.velocity = rbbullet.velocity.normalized * bulletForce;
             //setat rotatia sagetii
             Vector2 lookDir = (Vector2)target.position - (Vector2)rbbullet.position;
-            float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f;
+            float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg ;
 
             rbbullet.rotation = angle;
             rbbullet.freezeRotation = true;
@@ -238,19 +246,33 @@ public class MinigunAi : MonoBehaviour, IEffecteable
 
     private float _currentEffectTimer = 0f;
     private float _nextTickTime = 0f;
+    bool slowApplied = false;
+
     public void HandleEffect()
     {
+
         if (_data == null) return;
         _currentEffectTimer += Time.deltaTime;
-
         if (_data.DOTAmount != 0 && _currentEffectTimer > _nextTickTime)
         {
             _nextTickTime += _data.tickSpeed;
             this.GetComponent<EnemyHealth>().TakeDamage((int)_data.DOTAmount);
+
+
+
+
+            if (_data.movementPenalty != 0 && slowApplied == false)
+            {
+                slowApplied = true;
+                this.speed = this.speed - _data.movementPenalty;
+
+            }
         }
 
         if (_currentEffectTimer > _data.duration)
         {
+            if (slowApplied) this.speed += _data.movementPenalty;
+            slowApplied = false;
             RemoveEffect();
         }
 

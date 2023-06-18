@@ -32,8 +32,12 @@ public class AbilityBuy : MonoBehaviour
 
 
         while (player == null) ;
+        print(statsHolder.getClass());
         potentialAbilities = player.GetComponent<PotentialAbilities>().getAbilities(statsHolder.getClass());
         int abCount = potentialAbilities.Count;
+
+        foreach (Ability ab in potentialAbilities)
+            print(ab.name);
 
         int index = Random.Range(0, abCount);
         if (index<abCount)

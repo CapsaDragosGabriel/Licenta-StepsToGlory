@@ -19,6 +19,15 @@ TagManager:
   - MinusStat
   - EventSystem
   - Center
+  - EnemyProj
+  - FirePoint
+  - RoomSpawn
+  - Rooms
+  - OptionsMenu
+  - ChooseMenu
+  - PlayerProj
+  - Loot
+  - Entry
   layers:
   - Default
   - TransparentFX

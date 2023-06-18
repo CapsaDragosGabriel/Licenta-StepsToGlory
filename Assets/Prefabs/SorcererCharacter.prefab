@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4124225270426609123}
   m_Layer: 0
   m_Name: FirePoint
-  m_TagString: Untagged
+  m_TagString: FirePoint
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -43,7 +43,6 @@ GameObject:
   - component: {fileID: 4124225270632462270}
   - component: {fileID: 4124225270632462269}
   - component: {fileID: 4124225270632462268}
-  - component: {fileID: 4124225270632462266}
   - component: {fileID: 4124225270632462267}
   - component: {fileID: 4124225270632462265}
   - component: {fileID: 4124225270632462264}
@@ -54,6 +53,7 @@ GameObject:
   - component: {fileID: 8206274187028726170}
   - component: {fileID: 7540251150140088885}
   - component: {fileID: 7540251150140088882}
+  - component: {fileID: 229002016}
   m_Layer: 0
   m_Name: SorcererCharacter
   m_TagString: Player
@@ -148,6 +148,7 @@ MonoBehaviour:
   center: {fileID: 7540251151303506821}
   flipped: 0
   tr: {fileID: 4124225270632462267}
+  stopDash: 0
 --- !u!50 &4124225270632462268
 Rigidbody2D:
   serializedVersion: 4
@@ -169,22 +170,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &4124225270632462266
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4124225270632462241}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4eb9f5ada8ae7b74aa2d7ea87ea84afa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  firePoint: {fileID: 4124225270426609123}
-  bulletPrefab: {fileID: 3067727684219720234, guid: f09ea61e50bbb6841bab22891d08fd5f, type: 3}
-  bulletForce: 20
-  baseAS: 0.8
 --- !u!96 &4124225270632462267
 TrailRenderer:
   serializedVersion: 2
@@ -375,7 +360,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f395f10b3bf1b74fada43b76b69f4af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ability: {fileID: 0}
+  ability: {fileID: 11400000, guid: 8d5dc0b5a0647cb42b51f76e22051396, type: 2}
   isPickup: 0
   canPickup: 0
   key: 50
@@ -391,7 +376,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f395f10b3bf1b74fada43b76b69f4af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ability: {fileID: 0}
+  ability: {fileID: 11400000, guid: 3011682c919b30f41906916eb1541e10, type: 2}
   isPickup: 0
   canPickup: 0
   key: 51
@@ -407,7 +392,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f395f10b3bf1b74fada43b76b69f4af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ability: {fileID: 11400000, guid: 092db7645c6ae754694185c57f93b7f6, type: 2}
+  ability: {fileID: 11400000, guid: 13611ad3a28f2e640827312ad6002ad4, type: 2}
   isPickup: 0
   canPickup: 0
   key: 52
@@ -424,6 +409,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseStats: {fileID: 11400000, guid: 2b64dfbe7c4a152458781c356a2d4afc, type: 2}
+  playerName: 
   characterClass: 2
   experience: 0
   nextLvlExp: 2
@@ -440,14 +426,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2580b574ac3733040b2d94c029b66b83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gunnerAbilities:
-  - {fileID: 11400000, guid: 97aabf0758fae4c46ba9d807dbc21ba7, type: 2}
-  - {fileID: 11400000, guid: 875539efbaa2e5f40800a45372890f44, type: 2}
-  - {fileID: 11400000, guid: 1ff181ec292e1934bb486d79feec1887, type: 2}
+  gunnerAbilities: []
   sorcererAbilities:
   - {fileID: 11400000, guid: 092db7645c6ae754694185c57f93b7f6, type: 2}
   - {fileID: 11400000, guid: 4f492ca2bf580f74d87ed404578d2110, type: 2}
+  - {fileID: 11400000, guid: 8d5dc0b5a0647cb42b51f76e22051396, type: 2}
+  - {fileID: 11400000, guid: 13611ad3a28f2e640827312ad6002ad4, type: 2}
+  - {fileID: 11400000, guid: 3011682c919b30f41906916eb1541e10, type: 2}
+  - {fileID: 11400000, guid: 81e74ff6118079940b27597444515579, type: 2}
   warriorAbilities: []
+--- !u!114 &229002016
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4124225270632462241}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4edddcb0fcd3eaf4984ec89365048b29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  firePoint: {fileID: 4124225270426609123}
+  bulletPrefab: {fileID: 762017717062515913, guid: 27e785b73f3a0e8419cb00b7565d8965, type: 3}
+  bulletForce: 15
+  baseAS: 1.2
 --- !u!1 &7540251149927861885
 GameObject:
   m_ObjectHideFlags: 0

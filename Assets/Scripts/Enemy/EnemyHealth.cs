@@ -17,8 +17,11 @@ public class EnemyHealth : MonoBehaviour
     private GameObject goldPrefab;
     [SerializeField]
     private float goldChance=35f;
+    Color color;
     private void Start()
     {
+        color = gameObject.GetComponent<SpriteRenderer>().color;
+
         health = maxHealth;
         player = GameObject.FindGameObjectWithTag("Player");
     }
@@ -27,6 +30,7 @@ public class EnemyHealth : MonoBehaviour
     {
 
             health -= damage;
+        StartCoroutine("flashColor");
         if (health <= 0 && player!=null)
         {
             player.GetComponent<StatsHolder>().increaseExp(experience);
@@ -42,6 +46,14 @@ public class EnemyHealth : MonoBehaviour
 
             Destroy(gameObject);
         }
+    }
+    public IEnumerator flashColor()
+    {
+        var tempColor = color;
+        tempColor.a = 0.5f;
+        gameObject.GetComponent<SpriteRenderer>().color = tempColor;
+        yield return new WaitForSeconds(0.3f);
+        gameObject.GetComponent<SpriteRenderer>().color = color;
     }
     public bool isFull()
     {

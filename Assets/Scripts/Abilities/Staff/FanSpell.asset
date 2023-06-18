@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d96d4119ed58d1c4284638cf8c604924, type: 3}
+  m_Name: FanSpell
+  m_EditorClassIdentifier: 
+  name: FanSpell
+  baseCooldown: 6
+  cooldownTime: 6
+  activeTime: 0.25
+  sprite: {fileID: 4398669133865780567, guid: ed8401b062e9d3d4eb9b3ff8881ac402, type: 3}
+  firePoint: {fileID: 0}
+  projectilePrefab: {fileID: 762017717062515913, guid: 56c8372249d6a204d979e13a8fe8bdb8, type: 3}
+  bulletForce: 15

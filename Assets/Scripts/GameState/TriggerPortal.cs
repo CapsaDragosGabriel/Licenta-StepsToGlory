@@ -36,9 +36,16 @@ public class TriggerPortal : MonoBehaviour
     {
         if (collision.tag.Equals("Player"))
         {
-          //  Debug.Log("hi");
-            if(gameController!= null) 
-            gameController.GetComponent<WinLose>().WinLevel();
+            //  Debug.Log("hi");
+
+            if (gameController != null)
+                gameController.GetComponent<WinLose>().WinLevel();
+            else
+            {
+                gameController = GameObject.FindGameObjectWithTag("GameController");
+                gameController.GetComponent<WinLose>().WinLevel();
+
+            }
         }
     }
 }

@@ -9,8 +9,9 @@ public class StatsHolder : MonoBehaviour
     private Stats baseStats;
 
     private Stats currStats  ;
-    [SerializeField]
 
+    public string playerName = "Anonymous";
+    [SerializeField]
     private Classes characterClass=Classes.Sorcerer;
     private int level=0;
     [SerializeField]
@@ -19,14 +20,17 @@ public class StatsHolder : MonoBehaviour
     private float nextLvlExp = 2;
     private int points = 3;
     [SerializeField]
-    private float gold = 0f;
+    private int gold = 0;
+
+    public void setPlayerName(string name) { this.playerName = name; }
+    public string getPlayerName() { return playerName; }
 
     public Classes getClass() { return characterClass; }
     public float getGold() { return gold; }
-    public void setGold(float gold) { this.gold = gold; }
-    public void gainGold(float gold) { this.gold += gold;}
+    public void setGold(float gold) { this.gold = (int)gold; }
+    public void gainGold(float gold) { this.gold += (int)gold;}
     public void spendGold(float gold) {
-        if (this.gold>=gold) { this.gold -= gold; }
+        if (this.gold>=gold) { this.gold -= (int)gold; }
     }
 
     public int getPoints() {return points; }
@@ -67,7 +71,9 @@ public class StatsHolder : MonoBehaviour
     }
     public void decrAd()
     {
-        if (currStats.GetStatValue(StatType.ad) > 0)
+        
+        if (currStats.GetStatValue(StatType.ad) > 0 &&
+            currStats.GetStatValue(StatType.ad)+ currStats.GetStatValue(StatType.ap)+ currStats.GetStatValue(StatType.endurance)-level==3)
         {
             currStats.UpgradeStat(StatType.ad, -1);
             points++;
@@ -86,9 +92,9 @@ public class StatsHolder : MonoBehaviour
         }
     }
 
-    public void incrCd() => currStats.UpgradeStat(StatType.cd);
+    //public void incrCd() => currStats.UpgradeStat(StatType.cd);
 
-    public void decrCd() => currStats.UpgradeStat(StatType.cd);
+    //public void decrCd() => currStats.UpgradeStat(StatType.cd);
     /*
     public void UpgradeCurrentStat(StatType statType,float value)
     {
@@ -105,6 +111,10 @@ public class StatsHolder : MonoBehaviour
     public void Awake()
     {
         currStats=Instantiate(baseStats); 
+    }
+    public void Update()
+    {
+       
     }
 
 }

@@ -18,6 +18,8 @@ public class Ability : ScriptableObject
     {
         return 0;
     }
+
+    
     public virtual void Activate(GameObject gameObject) { }
     public virtual void BeginCooldown(GameObject gameObject) { }
 

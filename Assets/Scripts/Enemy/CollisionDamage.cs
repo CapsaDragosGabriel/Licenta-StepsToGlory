@@ -8,6 +8,7 @@ public class CollisionDamage : MonoBehaviour
     private PlayerHealth playerHealth;
     private Invulnerability invulnerability;
     public int damage = 1;
+    public AudioSource munchSound;
     // Start is called before the first frame update
     void Start()
     {
@@ -31,8 +32,10 @@ public class CollisionDamage : MonoBehaviour
         if (collision.gameObject.tag == "Player"
             && invulnerability.invulnerabilityTime == 0)
         {
-
-            playerHealth.TakeDamage(damage);
+                        if (playerHealth != null)
+                        { playerHealth.TakeDamage(damage);
+                            munchSound.Play();
+                        }
         }
     }
     private void OnCollisionStay2D(Collision2D collision)

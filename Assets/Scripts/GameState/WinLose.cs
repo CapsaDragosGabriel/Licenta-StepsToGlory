@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using UnityEngine.SceneManagement;
+using static Cinemachine.DocumentationSortingAttribute;
+
 public class WinLose : MonoBehaviour
 {
     // Start is called before the first frame update
@@ -15,9 +17,11 @@ public class WinLose : MonoBehaviour
 
     //   private GameObject movePack;
     private Animator transition;
-    private int nextIndex=1;
+    public int nextIndex=1;
     public bool loadShop = true;
     int shopIndex = 2;
+
+    public int floorNr=1;
     public int getNextIndex() { return nextIndex; }
     private void Start()
     {
@@ -28,7 +32,9 @@ public class WinLose : MonoBehaviour
         //nextIndex = SceneManager.GetActiveScene().buildIndex + 1;
 
         GameObject ground = GameObject.FindGameObjectWithTag("Ground");
-        if(ground!=null)
+
+       if(ground!=null)
+            if(ground.GetComponent<spawner2>())
         ground.GetComponent<spawner2>().ForceSpawn();
     }
 
@@ -45,12 +51,25 @@ public class WinLose : MonoBehaviour
        
 
     }
+
+    public StatsGather GetStatsGather()
+    {
+        StatsHolder statsHolder= GameObject.FindGameObjectWithTag("Player").GetComponent<StatsHolder>();
+        StatsGather statsGather = new StatsGather();
+        statsGather.currClass = statsHolder.getClass();
+        statsGather.level = statsHolder.getLevel();
+        statsGather.gold = (int)statsHolder.getGold();
+        statsGather.playerName = statsHolder.getPlayerName();
+        statsGather.floor = this.floorNr;
+        return statsGather;
+    }
     IEnumerator LoadSceneAsync()
     {
-
+        floorNr++;
         transition.SetTrigger("Start");
         nextIndex = nextIndex + 1;
         if (nextIndex == shopIndex) nextIndex++;
+        if (SceneManager.sceneCountInBuildSettings<=nextIndex ) nextIndex --;
 
         // Set the current Scene to be able to unload it later
         UnityEngine.SceneManagement.Scene currentScene = SceneManager.GetActiveScene();
@@ -92,19 +111,22 @@ public class WinLose : MonoBehaviour
         {
             if (gc == this) continue;
             gc.GetComponent<WinLose>().loadShop = true;
+            gc.GetComponent<WinLose>().floorNr = this.floorNr;
             gc.GetComponent<WinLose>().nextIndex = this.nextIndex;
 
         }
-        Destroy(gameController);
-        ground.GetComponent<spawner2>().ForceSpawn();
 
+        Destroy(gameController);
+
+      ground.GetComponent<spawner2>().ForceSpawn();
         // print(GameObject.FindGameObjectsWithTag("Respawn")[nextIndex].transform.position);
     }
-
+    
     IEnumerator LoadShopAsync()
     {
         transition.SetTrigger("Start");
 
+        if (SceneManager.sceneCountInBuildSettings < nextIndex) nextIndex = 1;
 
         // Set the current Scene to be able to unload it later
         UnityEngine.SceneManagement.Scene currentScene = SceneManager.GetActiveScene();
@@ -142,6 +164,8 @@ public class WinLose : MonoBehaviour
         {
             if (gc == this) continue;
             gc.GetComponent<WinLose>().loadShop = false;
+            gc.GetComponent<WinLose>().floorNr = this.floorNr;
+
             gc.GetComponent<WinLose>().nextIndex = this.nextIndex;
 
         }
@@ -151,11 +175,20 @@ public class WinLose : MonoBehaviour
 
         // print(GameObject.FindGameObjectsWithTag("Respawn")[nextIndex].transform.position);
     }
+    public void WipeEnemies()
+    {
+        var Enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        foreach (GameObject gc in Enemies) { Destroy(gc); }
+    }
     public void WinLevel()
     {
         if (!gameEnded)
         {
+            WipeEnemies();
             gameEnded= true;
+
+
+
 
             try
             {
@@ -183,8 +216,55 @@ public class WinLose : MonoBehaviour
     {
         if (!gameEnded)
         {
+            WipeEnemies();
+
             gameEnded = true;
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            StartCoroutine("LoadMenuAsync");
+            //SceneManager.LoadScene("Main Menu");
         }
+    }
+
+
+
+    IEnumerator LoadMenuAsync()
+    {
+       // transition.SetTrigger("Start");
+
+        nextIndex = 0;
+
+        // Set the current Scene to be able to unload it later
+        UnityEngine.SceneManagement.Scene currentScene = SceneManager.GetActiveScene();
+
+        foreach (GameObject go in GameObject.FindGameObjectsWithTag("ToDestroy"))
+        {
+            Destroy(go);
+
+        }
+        Destroy(ui);
+        Destroy(player);
+        Destroy(cam);
+
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(0, LoadSceneMode.Additive);
+        // Wait until the last operation fully loads to return anything
+        while (!asyncLoad.isDone)
+        {
+            yield return null;
+        }
+;        //  the GameObject (you attach ;this in the Inspector) to the newly loaded Scene
+         //SceneManager.MoveGameObjectToScene(eventSystem, SceneManager.GetSceneByBuildIndex(nextIndex));
+
+      
+
+
+        // SceneManager.MoveGameObjectToScene(movePack, SceneManager.GetSceneByBuildIndex(nextIndex));
+
+
+        // Unload the previous Scene
+        SceneManager.UnloadSceneAsync(currentScene);
+
+
+        Destroy(gameController);
+
+        // print(GameObject.FindGameObjectsWithTag("Respawn")[nextIndex].transform.position);
     }
 }

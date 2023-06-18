@@ -17,7 +17,7 @@ public class ShotgunAI : MonoBehaviour, IEffecteable
     bool reachedEndPath = false;
     public bool isStunned = false;
     private Collider2D aggroRange;
-
+    AudioSource shotgunSound;
 
     private bool canShoot = true;
 
@@ -38,7 +38,7 @@ public class ShotgunAI : MonoBehaviour, IEffecteable
         seeker = GetComponent<Seeker>();
         if (target == null)
             target = GameObject.FindGameObjectWithTag("Player").transform;
-
+        shotgunSound=GetComponent<AudioSource>();   
         Debug.Log(target);
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -71,7 +71,7 @@ public class ShotgunAI : MonoBehaviour, IEffecteable
                         {
                             reachedRange = true;
                             rb.velocity = Vector3.zero;
-                            Debug.Log("stop");
+                            //Debug.Log("stop");
                         }
                     }
                 }
@@ -116,7 +116,9 @@ public class ShotgunAI : MonoBehaviour, IEffecteable
 
 
             if (target != null)
-                Shoot();
+            { Shoot();
+                shotgunSound.Play();
+            }
             canShoot = false;
 
         }
@@ -174,7 +176,7 @@ public class ShotgunAI : MonoBehaviour, IEffecteable
         Transform firePoint = this.GetComponent<Transform>();
         for (int i = 0; i < pelletCount; i++)
         { 
-                GameObject bullet = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
+                GameObject bullet = Instantiate(bulletPrefab, firePoint.position+0.2f*(target.transform.position - firePoint.position).normalized, Quaternion.identity);
 
             bullet.GetComponent<EnemyBullet>().damage = damage;
 
@@ -188,13 +190,13 @@ public class ShotgunAI : MonoBehaviour, IEffecteable
                 rbbullet.velocity = rbbullet.velocity.normalized * bulletForce;
                 //setat rotatia sagetii
                 Vector2 lookDir = (Vector2)target.position - rbbullet.position;
-                float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f;
+                float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg ;
 
                 rbbullet.rotation = angle;
                 rbbullet.freezeRotation = true;
                 try
                 {
-                    Destroy(bullet, 4);
+                    Destroy(bullet, 2);
                 }
                 catch { }
             }
@@ -212,19 +214,33 @@ public class ShotgunAI : MonoBehaviour, IEffecteable
 
     private float _currentEffectTimer = 0f;
     private float _nextTickTime = 0f;
+    bool slowApplied = false;
+
     public void HandleEffect()
     {
+
         if (_data == null) return;
         _currentEffectTimer += Time.deltaTime;
-
         if (_data.DOTAmount != 0 && _currentEffectTimer > _nextTickTime)
         {
             _nextTickTime += _data.tickSpeed;
             this.GetComponent<EnemyHealth>().TakeDamage((int)_data.DOTAmount);
+
+
+
+
+            if (_data.movementPenalty != 0 && slowApplied == false)
+            {
+                slowApplied = true;
+                this.speed = this.speed - _data.movementPenalty;
+
+            }
         }
 
         if (_currentEffectTimer > _data.duration)
         {
+            if (slowApplied) this.speed += _data.movementPenalty;
+            slowApplied = false;
             RemoveEffect();
         }
 

@@ -39,11 +39,12 @@ public class PlayerMovement : MonoBehaviour
     }
     void Update()
     {
+        if (stopDash) isDashing = false;
         if (isDashing)
         {
-        return;
+            StartCoroutine(this.GetComponent<Invulnerability>().GetInvulnerable(dashingTime));
+            return;
         }
-        this.GetComponent<Collider2D>().enabled = true;
 
         movement.x = Input.GetAxisRaw("Horizontal");
         movement.y = Input.GetAxisRaw("Vertical");
@@ -77,6 +78,8 @@ public class PlayerMovement : MonoBehaviour
        
         Vector2 lookDir=mousePos- center.GetComponent<Rigidbody2D>().position;
         float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg-90f;
+
+
         if (lookDir.x < 0 && !flipped)
         {
             if (GameObject.FindGameObjectWithTag("Character"))
@@ -128,21 +131,25 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
+    public void forcedDash(Vector3 direction)
+    {
+        if (!stopDash)
+        {
+        isDashing = true;
+        stopDash = false;
+        rb.velocity = new Vector2(transform.localScale.x * dashingPower * movement.x, transform.localScale.y * dashingPower * movement.y);
+        }
+    }
 
-    private IEnumerator Dash()
+    public void setDashing(bool isDashing) { this.isDashing = isDashing; }
+    private IEnumerator Dash()  
     {
         canDash = false;
         isDashing= true;
-        Vector2 desiredPos = rb.position + new Vector2(transform.localScale.x * dashingPower * movement.x*dashingTime, transform.localScale.y * dashingPower * movement.y*dashingTime);
-
-        RaycastHit2D raycastHit = Physics2D.Raycast(rb.position,desiredPos);
-
-
       
-            rb.velocity = new Vector2(transform.localScale.x * dashingPower * movement.x, transform.localScale.y * dashingPower * movement.y);
-            tr.emitting = true;
-            StartCoroutine(this.GetComponent<Invulnerability>().GetInvulnerable(dashingTime));
-      
+        rb.velocity = new Vector2(transform.localScale.x * dashingPower * movement.x, transform.localScale.y * dashingPower * movement.y);
+        tr.emitting = true;
+        StartCoroutine(this.GetComponent<Invulnerability>().GetInvulnerable(dashingTime));
 
         yield return new WaitForSeconds(dashingTime);
             tr.emitting = false;
@@ -153,5 +160,20 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
-  
+   public bool stopDash = false;
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Wall" || collision.gameObject.tag == "Loot")
+        {
+            stopDash = true;
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Wall" || collision.gameObject.tag == "Loot")
+        {
+            stopDash = false;
+        }
+    }
 }

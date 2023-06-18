@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c03d7aab737b37042a2a263af44cc6d9, type: 3}
+  m_Name: Barricade
+  m_EditorClassIdentifier: 
+  name: Barricade
+  baseCooldown: 5
+  cooldownTime: 5
+  activeTime: 3
+  sprite: {fileID: 7468111869083240556, guid: 0df1ef95bdc577a45b919ea0bfdc908c, type: 3}
+  spriteInstance: {fileID: 0}

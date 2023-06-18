@@ -10,7 +10,7 @@ public class DropGold : MonoBehaviour
     int maxGold = 10;
     int minGold = 1;
     public void SetMaxGold(int maxGold) { this.maxGold = maxGold; }
-    public void SetMinGold(int maxGold) { this.minGold = minGold; }
+    public void SetMinGold(int minGold) { this.minGold = minGold; }
 
     private void OnEnable()
     {

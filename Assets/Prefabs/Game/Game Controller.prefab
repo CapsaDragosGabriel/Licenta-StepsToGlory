@@ -99,6 +99,8 @@ GameObject:
   m_Component:
   - component: {fileID: 5463173940631508352}
   - component: {fileID: 5463173940631508367}
+  - component: {fileID: 1682495341}
+  - component: {fileID: 8479387743278757539}
   m_Layer: 0
   m_Name: Game Controller
   m_TagString: GameController
@@ -132,6 +134,38 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ba74771ae651f5c40b5241e838a608ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 0}
+  cam: {fileID: 0}
+  ui: {fileID: 0}
+  gameController: {fileID: 0}
+  eventSystem: {fileID: 0}
+  nextIndex: 1
+  loadShop: 1
+  floorNr: 1
+--- !u!114 &1682495341
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5463173940631508366}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a12225d2a6861f45925d91db010678b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8479387743278757539
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5463173940631508366}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a659ff23a6056294197c36c6de233dc0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &8632482809656786364

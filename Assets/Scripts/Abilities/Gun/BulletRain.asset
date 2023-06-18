@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: BulletRain
   m_EditorClassIdentifier: 
   name: BulletRain
-  baseCooldown: 3
-  cooldownTime: 1
+  baseCooldown: 6
+  cooldownTime: 3
   activeTime: 3
   sprite: {fileID: 5012521337482132196, guid: d6ed6577ed1c2e94b8a9c52ce20b68a6, type: 3}
   spriteInstance: {fileID: 0}

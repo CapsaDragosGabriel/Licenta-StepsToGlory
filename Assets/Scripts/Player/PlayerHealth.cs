@@ -53,29 +53,85 @@ public class PlayerHealth : MonoBehaviour
 
             lastEndurance = currEndurance;
         }
+        if (health <= 0)
+        {
+            Debug.Log("0 HP");
+            Destroy(player);
+            if (gameController != null)
+                gameController.GetComponent<WinLose>().LoseLevel();
+            else
+            {
+                gameController = GameObject.FindGameObjectWithTag("GameController");
+                gameController.GetComponent<WinLose>().LoseLevel();
 
+            }
+        }
 
     }
     public void TakeDamage(float damage)
     {
+        if (this.gameObject)
+        { 
+            if (gameObject.tag == "Player" && invulnerability.invulnerabilityTime == 0 && health > 0)
+            {
+                health -= damage;
+                healthBar.SetHealth(health);
 
-        if (gameObject.tag == "Player" && invulnerability.invulnerabilityTime == 0 && health>0)
-        { health -= damage;
-            healthBar.SetHealth(health);
+                invulnerability.StartCoroutine("GetInvulnerable", invulnerability.defaultInvulnerability);
+            }
+            if (health <= 0)
+            {
+                //  Debug.Log("0 HP");
 
-            invulnerability.StartCoroutine("GetInvulnerable", invulnerability.defaultInvulnerability);
-        }
-        if (health<=0 )
-        {
-         
-            Destroy(player);
-            gameController.GetComponent<WinLose>().LoseLevel();
+                if (gameController != null)
+                {
+                    gameController.GetComponent<Json>().SaveToJson();
+                    gameController.GetComponent<Json>().LoadFromJson();
+                    Destroy(player,2f);
+
+                    gameController.GetComponent<WinLose>().LoseLevel();
+
+                }
+                else
+                {
+                    gameController = GameObject.FindGameObjectWithTag("GameController");
+                   gameController.GetComponent<Json>().SaveToJson();
+                    gameController.GetComponent<Json>().LoadFromJson();
+
+                    Destroy(player,2f);
+                    gameController.GetComponent<WinLose>().LoseLevel();
+
+                }
+
+            }
+            
+
         }
     }
     public void TakeHeal(float heal)
     {
         if (heal + health > maxHealth) health = maxHealth;
         else health += heal;
+        StartCoroutine("HealEffect");
         healthBar.SetHealth(health);    
+    }
+    public IEnumerator HealEffect()
+    {
+        var bodyParts = this.gameObject.GetComponentsInChildren<SpriteRenderer>();
+        foreach (var part in bodyParts)
+        {
+
+        part.color = new Color(0, 150, 0);
+
+        }
+        yield return new WaitForSeconds(0.7f);
+        foreach (var part in bodyParts)
+        {
+
+            part.color = new Color(255, 255, 255);
+
+        }
+
+
     }
 }
