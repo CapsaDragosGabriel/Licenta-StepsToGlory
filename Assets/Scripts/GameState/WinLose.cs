@@ -17,6 +17,7 @@ public class WinLose : MonoBehaviour
 
     //   private GameObject movePack;
     private Animator transition;
+    private Animator deathScreen;
     public int nextIndex=1;
     public bool loadShop = true;
     int shopIndex = 2;
@@ -28,9 +29,9 @@ public class WinLose : MonoBehaviour
        
       //  movePack = GameObject.FindGameObjectWithTag("MovePack");
 
-        transition = GetComponentInChildren<Animator>();
+        transition = GetComponentsInChildren<Animator>()[0];
         //nextIndex = SceneManager.GetActiveScene().buildIndex + 1;
-
+        deathScreen = GetComponentsInChildren<Animator>()[1];
         GameObject ground = GameObject.FindGameObjectWithTag("Ground");
 
        if(ground!=null)
@@ -228,9 +229,13 @@ public class WinLose : MonoBehaviour
 
     IEnumerator LoadMenuAsync()
     {
-       // transition.SetTrigger("Start");
-
+        // transition.SetTrigger("Start");
         nextIndex = 0;
+        deathScreen.SetTrigger("Death");
+        player.SetActive(false);
+        ui.SetActive(false);
+        cam.GetComponent<CameraFollow>().enabled = false;
+        yield return new WaitForSeconds(2);
 
         // Set the current Scene to be able to unload it later
         UnityEngine.SceneManagement.Scene currentScene = SceneManager.GetActiveScene();
@@ -241,8 +246,8 @@ public class WinLose : MonoBehaviour
 
         }
         Destroy(ui);
-        Destroy(player);
         Destroy(cam);
+        Destroy(player);
 
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(0, LoadSceneMode.Additive);
         // Wait until the last operation fully loads to return anything
