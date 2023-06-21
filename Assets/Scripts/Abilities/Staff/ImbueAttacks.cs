@@ -8,12 +8,13 @@ public class ImbueAttacks : Ability
 {
     public GameObject spriteInstance;
     float ap;
+    bool decrease=false;
     StatsHolder statsHolder;
     // Start is called before the first frame update
     public override void Activate(GameObject parent)
     {
         statsHolder = parent.GetComponent<StatsHolder>();
-       
+       decrease= true;
         ap = statsHolder.getCurrStats().GetStatValue(StatType.ap);
 
         statsHolder.getCurrStats().UpgradeStat(StatType.ad,  ap * 0.5f);
@@ -23,8 +24,8 @@ public class ImbueAttacks : Ability
 
     public override void BeginCooldown(GameObject gameObject)
     {
-        statsHolder.getCurrStats().DowngradeStat(StatType.ad,  ap * 0.5f );
-
+       if (decrease) statsHolder.getCurrStats().DowngradeStat(StatType.ad,  ap * 0.5f );
+        decrease = false;
 
     }
 

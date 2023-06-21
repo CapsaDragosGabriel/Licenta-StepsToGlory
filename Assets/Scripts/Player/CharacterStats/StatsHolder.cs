@@ -44,6 +44,10 @@ public class StatsHolder : MonoBehaviour
         {
             level += 1;
             experience -=nextLvlExp;
+            if (gameObject.GetComponent<PlayerHealth>().health < gameObject.GetComponent<PlayerHealth>().maxHealth)
+            { gameObject.GetComponent<PlayerHealth>().TakeHeal(1);
+                Debug.Log("lvlup");
+            }
             nextLvlExp *= 1.75f;
             points += 1;
         }

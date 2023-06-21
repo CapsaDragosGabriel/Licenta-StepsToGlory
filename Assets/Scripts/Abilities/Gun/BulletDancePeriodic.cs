@@ -15,6 +15,7 @@ public class BulletDancePeriodic : MonoBehaviour
 
     private void Start()
     {
+       gameObject.GetComponent<SpriteRenderer>().enabled = false;
         bullets1 = transform.GetChild(0).gameObject;
         bullets2 = transform.GetChild(1).gameObject;
 

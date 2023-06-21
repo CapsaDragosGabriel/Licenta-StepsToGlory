@@ -19,27 +19,38 @@ public class Json : MonoBehaviour
 
     public void LoadFromJson()
     {
-        string json = File.ReadAllText(Application.dataPath + "/Leaderboards.json");
-        string jsonLastPlayer = File.ReadAllText(Application.dataPath + "/LastPlayer.json");
+        try
+        {
+            string json = File.ReadAllText(Application.dataPath + "/Leaderboards.json");
+            string jsonLastPlayer = File.ReadAllText(Application.dataPath + "/LastPlayer.json");
 
-        LeaderBoards data = JsonUtility.FromJson<LeaderBoards>(json);
-        StatsGather lastPlayer = JsonUtility.FromJson<StatsGather>(jsonLastPlayer);
-        if (!CheckDuplicates(data, lastPlayer))
-        { data.playersStats.Add(lastPlayer);
-        string newLeaderboards = JsonUtility.ToJson(data);
+            LeaderBoards data = JsonUtility.FromJson<LeaderBoards>(json);
+            StatsGather lastPlayer = JsonUtility.FromJson<StatsGather>(jsonLastPlayer);
+            if (!CheckDuplicates(data, lastPlayer))
+            {
+                data.playersStats.Add(lastPlayer);
+                string newLeaderboards = JsonUtility.ToJson(data);
 
-        File.WriteAllText(Application.dataPath + "/Leaderboards.json", newLeaderboards); }
+                File.WriteAllText(Application.dataPath + "/Leaderboards.json", newLeaderboards);
+            }
 
-        SortLeaderboards(data);
+            SortLeaderboards(data);
 
-        //  Debug.Log(data);
-        // leaders.text = data.ToString();
-        SetFields(data);
-        
+            //  Debug.Log(data);
+            // leaders.text = data.ToString();
+            SetFields(data);
+        }
+        catch
+        {
+            string jsonLastPlayer = File.ReadAllText(Application.dataPath + "/LastPlayer.json");
+
+            File.WriteAllText(Application.dataPath + "/Leaderboards.json",jsonLastPlayer);
+        }
     }
     public void SetFields(LeaderBoards data)
     {
         int i = 0;
+        if (objects!= null)
         foreach (var entry in objects)
         {
             var textFields = entry.GetComponentsInChildren<TextMeshProUGUI>();

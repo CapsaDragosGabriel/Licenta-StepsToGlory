@@ -72,7 +72,7 @@ public class OptionsMenu : MonoBehaviour
         Debug.Log(settingsGather.isFullscreen);
 
         string json = JsonUtility.ToJson(settingsGather);
-        File.WriteAllText(Application.dataPath + "/Settings.json", json);
+        File.WriteAllText(Application.persistentDataPath + "/Settings.json", json);
     }
 
 
@@ -81,7 +81,7 @@ public class OptionsMenu : MonoBehaviour
     {
         resolutions = Screen.resolutions;
 
-        string json = File.ReadAllText(Application.dataPath + "/Settings.json");
+        string json = File.ReadAllText(Application.persistentDataPath + "/Settings.json");
         SettingsGather savedSettings = JsonUtility.FromJson<SettingsGather>(json);
 
         this.isFullscreen= savedSettings.isFullscreen;
