@@ -1,5 +1,6 @@
 # Licenta-StepsToGlory
 Licenta Capșa Dragoș Gabriel iunie-iulie 2023
+
 In acest branch sunt documentele din formular iar in branch-ul de master se afla proiectul in unity in totalitate.
 
 Link demo gameplay
